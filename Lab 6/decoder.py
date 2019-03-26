@@ -18,7 +18,7 @@ def Caesar_decoder(message):
     for i in range(0, len(words)):
         decoded_word = (Caesar_encoder(words[i], shift))
         decoded_message.append(decoded_word)
-    return ' '.join(decoded_message), 26 - shift
+    return decoded_message, 26 - shift
 
 
 def Vigener_decoder(code):
@@ -34,6 +34,9 @@ def Vigener_decoder(code):
                 code_num = alphabet_lower.get(word[i])
                 if code_num is None:
                     code_num = alphabet_upper.get(word[i])
+                    if code_num is None:
+                        decoded_word += word[i]
+                        continue
                     key_num = alphabet_lower.get(key[i])
                     message_num = (code_num - key_num + 26) % 26
                     if message_num == 0:
@@ -48,6 +51,8 @@ def Vigener_decoder(code):
             if decoded_word in dictionary:
                 used_key = dictionary[j]
                 break
+        if used_key != '':
+            break
     message = list()
     for word in words:
         key = used_key.lower()
@@ -58,6 +63,9 @@ def Vigener_decoder(code):
             code_num = alphabet_lower.get(word[i])
             if code_num is None:
                 code_num = alphabet_upper.get(word[i])
+                if code_num is None:
+                    decoded_word += word[i]
+                    continue
                 key_num = alphabet_lower.get(key[i])
                 message_num = (code_num - key_num + 26) % 26
                 if message_num == 0:
@@ -88,5 +96,6 @@ while True:
         print('При шифровании использовался шифр Видженера.\nРасшифрованное сообщение: ' + message +
               '\nКлюч при шифровании: ' + key)
     else:
-        print('При шифровании использовался шифр Цезаря.\nРасшифрованное сообщение: ' + message +
+        print('При шифровании использовался шифр Цезаря.\nРасшифрованное сообщение: ' + ' '.join(message) +
               '\nСдвиг при шифровании: ' + str(shift))
+    print()

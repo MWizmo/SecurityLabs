@@ -9,6 +9,9 @@ def Caesar_encoder(message, shift):
             num = alphabet_lower.get(letter)
             if num is None:
                 num = alphabet_upper.get(letter)
+                if num is None:
+                    new_word += letter
+                    continue
                 shifted_num = (num + shift) % 26
                 if shifted_num == 0:
                     shifted_num = 26
@@ -44,6 +47,9 @@ def Vigener_encoder(message, key):
             message_num = alphabet_lower.get(word[i])
             if message_num is None:
                 message_num = alphabet_upper.get(word[i])
+                if message_num is None:
+                    code += word[i]
+                    continue
                 key_num = alphabet_lower.get(key[i])
                 coded_num = (message_num + key_num) % 26
                 if coded_num == 0:
