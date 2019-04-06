@@ -2,13 +2,13 @@ import socket
 from encoding import *
 
 
-def Caesar_decoder(message):
+def Caesar_decoder(message, start_position):
     words = message.split(' ')
     decoded_message = list()
     shift = 0
     for i in range(0, len(words)):
         if shift == 0:
-            for j in range(1, 27):
+            for j in range(start_position, 27):
                 decoded_word = (Caesar_encoder(words[i], j))
                 if decoded_word in dictionary:
                     shift = j
@@ -18,14 +18,21 @@ def Caesar_decoder(message):
     for i in range(0, len(words)):
         decoded_word = (Caesar_encoder(words[i], shift))
         decoded_message.append(decoded_word)
-    return decoded_message, 26 - shift
+    flag = True
+    for word in decoded_message:
+        if not(word in dictionary):
+            flag = False
+    if flag or shift == 0 or shift == 26:
+        return decoded_message, 26 - shift
+    else:
+        return Caesar_decoder(message, shift + 1)
 
 
-def Vigener_decoder(code):
+def Vigener_decoder(code, start_position):
     words = code.split(' ')
     used_key = ''
     for word in words:
-        for j in range(0, len(dictionary)):
+        for j in range(start_position, len(dictionary)):
             key = dictionary[j].lower()
             if len(word) > len(key):
                 key = lengthen_key(key, word)
@@ -78,7 +85,14 @@ def Vigener_decoder(code):
                     message_num = 26
                 decoded_word += get_key(alphabet_lower, message_num)
         message.append(decoded_word)
-    return ' '.join(message), used_key
+    flag = True
+    for word in message:
+        if not(word in dictionary):
+            flag = False
+    if flag:
+        return ' '.join(message), used_key
+    else:
+        return Vigener_decoder(code, get_key(dictionary, used_key) + 1)
 
 
 sock = socket.socket()
@@ -90,9 +104,9 @@ while True:
     if not code:
         continue
     print('Зашифрованное выражение:', code)
-    message, shift = Caesar_decoder(code)
+    message, shift = Caesar_decoder(code, 1)
     if shift == 0 or shift == 26:
-        message, key = Vigener_decoder(code)
+        message, key = Vigener_decoder(code, 0)
         print('При шифровании использовался шифр Видженера.\nРасшифрованное сообщение: ' + message +
               '\nКлюч при шифровании: ' + key)
     else:
