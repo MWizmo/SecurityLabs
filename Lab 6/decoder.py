@@ -104,12 +104,15 @@ while True:
     if not code:
         continue
     print('Зашифрованное выражение:', code)
-    message, shift = Caesar_decoder(code, 1)
-    if shift == 0 or shift == 26:
-        message, key = Vigener_decoder(code, 0)
-        print('При шифровании использовался шифр Видженера.\nРасшифрованное сообщение: ' + message +
-              '\nКлюч при шифровании: ' + key)
-    else:
-        print('При шифровании использовался шифр Цезаря.\nРасшифрованное сообщение: ' + ' '.join(message) +
-              '\nСдвиг при шифровании: ' + str(shift))
-    print()
+    try:
+        message, shift = Caesar_decoder(code, 1)
+        if shift == 0 or shift == 26:
+            message, key = Vigener_decoder(code, 0)
+            print('При шифровании использовался шифр Видженера.\nРасшифрованное сообщение: ' + message +
+                  '\nКлюч при шифровании: ' + key)
+        else:
+            print('При шифровании использовался шифр Цезаря.\nРасшифрованное сообщение: ' + ' '.join(message) +
+                  '\nСдвиг при шифровании: ' + str(shift))
+        print()
+    except:
+        print('Встречено слово не из словаря, расшифровка невозможна')
